@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Aldi Meal Planner Actions
+  version: 1.0.0
+  description: Actions for looking up Aldi Nord staple prices and costing a shopping list.
+paths:
+  /listProducts:
+    get:
+      summary: List available Aldi Nord products with prices
+      description: Returns the catalogue of staple products the shopping list can use. Each product has a name, category, pack size, unit, price of one pack in euros, and price per g or ml (or per piece). Call this first to see which products are available before planning meals.
+      operationId: listProducts
+      parameters:
+        - name: category
+          in: query
+          description: Optional. Only return products in this category, such as protein, legume, carb, vegetable, dairy or fat. Leave out to get every product.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The list of matching products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: string
+                    description: One product per line, formatted as name | category | pack size and unit | pack price in EUR | price per 100 units
+  /calculateBasketCost:
+    post:
+      summary: Calculate the cost of a shopping list
+      description: Takes the ingredients and amounts needed for the week and returns how many packs to buy of each, the cost of each line, and the total cost in euros. Use this to check a shopping list against the budget instead of calculating prices yourself.
+      operationId: calculateBasketCost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: string
+                  description: The shopping list as entries separated by semicolons. Each entry is name:amount:unit, where name matches a product from listProducts, amount is a number, and unit is g, ml or piece. Example: chicken breast:700:g;eggs:6:piece;spaghetti:400:g
+              required:
+                - items
+      responses:
+        '200':
+          description: The costed shopping list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lines:
+                    type: string
+                    description: One line per product with packs to buy and line cost in EUR
+                  totalEur:
+                    type: string
+                    description: Total cost of all packs in euros
+                  unmatched:
+                    type: string
+                    description: Items that did not match any product, so the shopping list can be corrected
