@@ -1,6 +1,7 @@
+name,category,pack_size,unit,price_eur
 chicken breast,protein,500,g,4.49
-canned fish (fillets),protein,130,g,1.30
-frozen fish (fillets),protein,250,g,2.99
+canned fish (fillets),protein,250,g,1.30
+frozen fish (fillets),protein,250,g,4.49
 eggs,protein,10,piece,1.99
 red lentils,legume,500,g,1.49
 chickpeas (canned),legume,400,g,0.89
